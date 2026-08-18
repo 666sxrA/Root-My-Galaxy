@@ -26,6 +26,13 @@ android {
         }
     }
 
+    buildTypes {
+        debug {
+            applicationIdSuffix = ".f956btest"
+            versionNameSuffix = "-f956b-dzg3-test"
+        }
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
