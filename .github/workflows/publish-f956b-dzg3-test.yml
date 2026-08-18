@@ -29,6 +29,8 @@ jobs:
           : > test-builds/f956b-dzg3/build.log
 
       - name: Checkout exact payload source
+        id: payload_checkout
+        continue-on-error: true
         uses: actions/checkout@v4
         with:
           repository: 666sxrA/Root-My-Galaxy-Payloads
@@ -36,12 +38,16 @@ jobs:
           path: payload-src
 
       - name: Set up JDK 21
+        id: setup_java
+        continue-on-error: true
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
       - name: Set up Android SDK
+        id: setup_android
+        continue-on-error: true
         uses: android-actions/setup-android@v4
         with:
           packages: 'platform-tools platforms;android-35 cmake;3.22.1'
@@ -49,15 +55,36 @@ jobs:
 
       - name: Set up Android NDK r29
         id: setup_ndk
+        continue-on-error: true
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r29
 
       - name: Set up Gradle
+        id: setup_gradle
+        continue-on-error: true
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Record setup outcomes
+        if: always()
+        shell: bash
+        run: |
+          cat > test-builds/f956b-dzg3/STATUS <<'EOF'
+          payload_checkout=${{ steps.payload_checkout.outcome }}
+          setup_java=${{ steps.setup_java.outcome }}
+          setup_android=${{ steps.setup_android.outcome }}
+          setup_ndk=${{ steps.setup_ndk.outcome }}
+          setup_gradle=${{ steps.setup_gradle.outcome }}
+          EOF
 
       - name: Build exact payload and APK
         id: build
+        if: >-
+          steps.payload_checkout.outcome == 'success' &&
+          steps.setup_java.outcome == 'success' &&
+          steps.setup_android.outcome == 'success' &&
+          steps.setup_ndk.outcome == 'success' &&
+          steps.setup_gradle.outcome == 'success'
         continue-on-error: true
         shell: bash
         env:
@@ -104,6 +131,12 @@ jobs:
             | tee test-builds/f956b-dzg3/apk.sha256
           echo success > test-builds/f956b-dzg3/STATUS
 
+      - name: Mark setup failure
+        if: always() && steps.build.outcome == 'skipped'
+        shell: bash
+        run: |
+          printf '\nsetup_failed_before_build\n' >> test-builds/f956b-dzg3/STATUS
+
       - name: Publish build record to test branch
         if: always()
         shell: bash
@@ -118,6 +151,6 @@ jobs:
           git commit -m 'build: publish F956B DZG3 test APK [skip ci]'
           git push origin HEAD:agent/f956b-dzg3-test-apk
 
-      - name: Fail workflow if build failed
-        if: steps.build.outcome != 'success'
+      - name: Fail workflow if build did not succeed
+        if: always() && steps.build.outcome != 'success'
         run: exit 1
