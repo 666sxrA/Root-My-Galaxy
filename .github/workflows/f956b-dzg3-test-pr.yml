@@ -1,0 +1,68 @@
+name: F956B DZG3 Test APK
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-f956b-test-apk:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/f956b-dzg3-test-apk'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout test app branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Checkout exact payload source
+        uses: actions/checkout@v4
+        with:
+          repository: 666sxrA/Root-My-Galaxy-Payloads
+          ref: agent/f956b-dzg3-port
+          path: payload-src
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK and NDK r29
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools platforms;android-37 cmake;3.22.1 ndk;29.0.14206865'
+          accept-android-sdk-licenses: true
+
+      - name: Build exact DZG3 exploit payload
+        run: |
+          set -euxo pipefail
+          export ANDROID_NDK_HOME="$ANDROID_SDK_ROOT/ndk/29.0.14206865"
+          make -C payload-src TARGET=q6q-F956BXXS4DZG3 release
+          PAYLOAD="payload-src/build/q6q-F956BXXS4DZG3/cve-2026-43499-app.release.so"
+          test "$(stat -c %s "$PAYLOAD")" -eq 104128
+          mkdir -p app/src/main/assets/payloads/q6q-F956BXXS4DZG3
+          cp "$PAYLOAD" app/src/main/assets/payloads/q6q-F956BXXS4DZG3/cve-2026-43499-app.so
+          sha256sum "$PAYLOAD" | tee f956b-payload-sha256.txt
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build debug test APK
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Record APK hash
+        run: sha256sum app/build/outputs/apk/debug/*.apk | tee f956b-apk-sha256.txt
+
+      - name: Upload test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: f956b-dzg3-exploit-test-apk
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            f956b-payload-sha256.txt
+            f956b-apk-sha256.txt
+          if-no-files-found: error
+          retention-days: 14
