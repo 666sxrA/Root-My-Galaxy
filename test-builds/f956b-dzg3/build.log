@@ -30,9 +30,9 @@ Calculating task graph as no cached configuration is available for tasks: assemb
 > Task :app:checkDebugDuplicateClasses
 > Task :app:checkDebugAarMetadata
 > Task :app:mergeLibDexDebug FROM-CACHE
+> Task :app:mergeDebugAssets
 > Task :app:mapDebugSourceSetPaths
 > Task :app:compileDebugNavigationResources FROM-CACHE
-> Task :app:mergeDebugAssets
 > Task :app:compressDebugAssets
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
@@ -63,9 +63,9 @@ warn: removing resource dev.busung.s25uroot.f956btest:string/history_log without
 > Task :app:packageDebug
 > Task :app:assembleDebug
 > Task :app:createDebugApkListingFileRedirect
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1787029750211.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1787029930002.json
 
-BUILD SUCCESSFUL in 53s
+BUILD SUCCESSFUL in 47s
 40 actionable tasks: 29 executed, 11 from cache
 Configuration cache entry stored.
-8bef1dae927dc0662c4f928740a338fb375839a1ecf32e5d468f7234c58084ac  test-builds/f956b-dzg3/F956B-DZG3-exploit-test.apk
+ff492d005d8dab9c74a036652cc0abfe28f59ad050a51a44f780346828f93a0a  test-builds/f956b-dzg3/F956B-DZG3-exploit-test.apk
