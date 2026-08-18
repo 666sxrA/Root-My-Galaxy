@@ -62,6 +62,23 @@ jobs:
           exec > >(tee -a test-builds/f956b-dzg3/build.log) 2>&1
           echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
 
+          echo '=== prepare stable test signing key ==='
+          mkdir -p "$HOME/.android"
+          if [ -s test-builds/f956b-dzg3/debug.keystore.b64 ]; then
+            base64 -d test-builds/f956b-dzg3/debug.keystore.b64 > "$HOME/.android/debug.keystore"
+          else
+            keytool -genkeypair -v \
+              -keystore "$HOME/.android/debug.keystore" \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -dname 'CN=Android Debug,O=Android,C=US' \
+              -keyalg RSA -keysize 2048 -validity 10000
+            base64 -w0 "$HOME/.android/debug.keystore" > test-builds/f956b-dzg3/debug.keystore.b64
+          fi
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android \
+            | tee test-builds/f956b-dzg3/signing.txt
+
           echo '=== build exact q6q payload ==='
           make -C payload-src TARGET=q6q-F956BXXS4DZG3 release || {
             echo payload_failed > test-builds/f956b-dzg3/STATUS
