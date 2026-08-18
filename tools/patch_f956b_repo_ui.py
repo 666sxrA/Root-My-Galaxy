@@ -3,6 +3,12 @@ from pathlib import Path
 path = Path("app/src/main/java/dev/busung/s25uroot/MainActivity.kt")
 text = path.read_text(encoding="utf-8")
 
+old = """    override fun onResume() {\n        super.onResume()\n        if (resumedOnce) installViewModel.refresh() else resumedOnce = true\n    }\n"""
+new = """    override fun onResume() {\n        super.onResume()\n        (application as? F956bTestApplication)?.importF956bTestLog()\n        if (resumedOnce) installViewModel.refresh() else resumedOnce = true\n    }\n"""
+if old not in text:
+    raise SystemExit("MainActivity onResume insertion point not found")
+text = text.replace(old, new, 1)
+
 old = """    onStartDownload: (UpdateInfo) -> Unit,\n    onInstall: () -> Unit,\n) {\n    LazyColumn(\n"""
 new = """    onStartDownload: (UpdateInfo) -> Unit,\n    onInstall: () -> Unit,\n) {\n    val context = LocalContext.current\n    val f956bTestTarget =\n        device.model.equals(\"SM-F956B\", ignoreCase = true) &&\n            device.kernelRelease == \"6.1.145-android14-11-33418572-abF956BXXS4DZG3\"\n    LazyColumn(\n"""
 if old not in text:
@@ -59,4 +65,4 @@ if marker not in text:
 text = text.replace(marker, card + marker, 1)
 
 path.write_text(text, encoding="utf-8")
-print("patched repository UI with F956B test card")
+print("patched repository UI with F956B test card and history refresh")
