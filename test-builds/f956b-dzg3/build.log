@@ -21,26 +21,26 @@ Calculating task graph as no cached configuration is available for tasks: assemb
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:generateDebugResources FROM-CACHE
+> Task :app:generateDebugBuildConfig FROM-CACHE
 > Task :app:javaPreCompileDebug FROM-CACHE
-> Task :app:generateDebugBuildConfig
 > Task :app:packageDebugResources FROM-CACHE
 > Task :app:generateDebugGlobalSynthetics FROM-CACHE
 > Task :app:desugarDebugFileDependencies FROM-CACHE
-> Task :app:processDebugNavigationResources
+> Task :app:processDebugNavigationResources FROM-CACHE
 > Task :app:checkDebugDuplicateClasses
 > Task :app:checkDebugAarMetadata
 > Task :app:mergeLibDexDebug FROM-CACHE
-> Task :app:mergeDebugAssets
 > Task :app:mapDebugSourceSetPaths
 > Task :app:compileDebugNavigationResources FROM-CACHE
-> Task :app:compressDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets FROM-CACHE
 > Task :app:createDebugCompatibleScreenManifests
-> Task :app:extractDeepLinksDebug
-> Task :app:mergeDebugResources FROM-CACHE
+> Task :app:extractDeepLinksDebug FROM-CACHE
 > Task :app:parseDebugLocalResources FROM-CACHE
+> Task :app:mergeDebugResources FROM-CACHE
 > Task :app:generateDebugRFile FROM-CACHE
-> Task :app:mergeExtDexDebug FROM-CACHE
 > Task :app:processDebugMainManifest
+> Task :app:mergeExtDexDebug FROM-CACHE
 > Task :app:mergeDebugJniLibFolders
 > Task :app:processDebugManifest
 > Task :app:processDebugManifestForPackage
@@ -63,9 +63,9 @@ warn: removing resource dev.busung.s25uroot.f956btest:string/history_log without
 > Task :app:packageDebug
 > Task :app:assembleDebug
 > Task :app:createDebugApkListingFileRedirect
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1787029930002.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1787059992880.json
 
-BUILD SUCCESSFUL in 47s
-40 actionable tasks: 29 executed, 11 from cache
+BUILD SUCCESSFUL in 46s
+40 actionable tasks: 25 executed, 15 from cache
 Configuration cache entry stored.
-ff492d005d8dab9c74a036652cc0abfe28f59ad050a51a44f780346828f93a0a  test-builds/f956b-dzg3/F956B-DZG3-exploit-test.apk
+eb4f12fc5518f47c14c35a3edd4c168c0147a35e36f11cae002136eb0e29b627  test-builds/f956b-dzg3/F956B-DZG3-exploit-test.apk
