@@ -15,6 +15,8 @@ data class TargetProfile(
     val kernelVersions: Set<String>,
     val exploit: RemoteArtifact,
     val kernelSu: RemoteArtifact,
+    val kernelReleases: Set<String> = emptySet(),
+    val fingerprints: Set<String> = emptySet(),
 ) {
     init {
         require(models.isNotEmpty()) { "Payload must support at least one model" }
@@ -25,16 +27,19 @@ data class TargetProfile(
         models.any { it.equals(snapshot.model, ignoreCase = true) }
 
     fun matchesKernelVersion(snapshot: DeviceSnapshot): Boolean =
-        snapshot.kernelVersion in kernelVersions
+        snapshot.kernelVersion in kernelVersions &&
+            (kernelReleases.isEmpty() || snapshot.kernelRelease in kernelReleases)
 
     fun matches(snapshot: DeviceSnapshot): Boolean =
-        matchesDevice(snapshot) && matchesKernelVersion(snapshot)
+        matchesDevice(snapshot) &&
+            matchesKernelVersion(snapshot) &&
+            (fingerprints.isEmpty() || snapshot.fingerprint in fingerprints)
 
     val supportedModels: String
         get() = models.joinToString()
 
     val supportedKernelVersions: String
-        get() = kernelVersions.joinToString()
+        get() = if (kernelReleases.isNotEmpty()) kernelReleases.joinToString() else kernelVersions.joinToString()
 }
 
 data class SupportManifest(
