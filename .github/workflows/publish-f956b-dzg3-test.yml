@@ -41,11 +41,17 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Android SDK and NDK r29
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v4
         with:
-          packages: 'platform-tools platforms;android-37 cmake;3.22.1 ndk;29.0.14206865'
+          packages: 'platform-tools platforms;android-35 cmake;3.22.1'
           accept-android-sdk-licenses: true
+
+      - name: Set up Android NDK r29
+        id: setup_ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r29
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -54,10 +60,12 @@ jobs:
         id: build
         continue-on-error: true
         shell: bash
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup_ndk.outputs.ndk-path }}
         run: |
           set -o pipefail
           exec > >(tee -a test-builds/f956b-dzg3/build.log) 2>&1
-          export ANDROID_NDK_HOME="$ANDROID_SDK_ROOT/ndk/29.0.14206865"
+          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
 
           echo '=== build exact q6q payload ==='
           make -C payload-src TARGET=q6q-F956BXXS4DZG3 release || {
