@@ -11,7 +11,7 @@ class F956bTestApplication : Application() {
         runCatching { importF956bTestLog() }
     }
 
-    private fun importF956bTestLog() {
+    fun importF956bTestLog() {
         val logFile = File(filesDir, TEST_LOG_FILE)
         if (!logFile.isFile || logFile.length() == 0L) return
 
@@ -31,7 +31,7 @@ class F956bTestApplication : Application() {
             completedAtMillis = now,
             result = if (succeeded) InstallRunResult.Succeeded else InstallRunResult.Failed,
             log = buildString {
-                appendLine("[F956B DZG3 test log imported after app start]")
+                appendLine("[F956B DZG3 test log imported into repository history]")
                 appendLine("source=$TEST_LOG_FILE")
                 appendLine("sha256=$digest")
                 appendLine()
