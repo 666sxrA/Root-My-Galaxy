@@ -36,10 +36,10 @@
             android:name=".InstallActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".F956bExploitTestActivity"
             android:exported="false" />
         <activity
-            android:name=".F956bExploitTestActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
