@@ -1,0 +1,71 @@
+ANDROID_NDK_HOME=/opt/hostedtoolcache/ndk/r29/x64
+=== build exact q6q payload ===
+make: Entering directory '/home/runner/work/Root-My-Galaxy/Root-My-Galaxy/payload-src'
+mkdir -p build/q6q-F956BXXS4DZG3
+/opt/hostedtoolcache/ndk/r29/x64/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android35-clang -DAPP_PAYLOAD=1 -fPIC -Oz -g0 \
+  -fno-unwind-tables -fno-asynchronous-unwind-tables \
+  -ffunction-sections -fdata-sections \
+  -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare \
+  -Isrc -DTARGET_HEADER='"targets/q6q-F956BXXS4DZG3/target.h"' \
+  src/main.c src/util.c src/slide_app.c src/fops.c src/pipe.c src/root.c src/preload.c -shared -pthread \
+  -Wl,--gc-sections -Wl,--icf=all -s -o build/q6q-F956BXXS4DZG3/cve-2026-43499-app.release.so
+truncate -s 104128 build/q6q-F956BXXS4DZG3/cve-2026-43499-app.release.so
+make: Leaving directory '/home/runner/work/Root-My-Galaxy/Root-My-Galaxy/payload-src'
+a94f079cf3ef7211b258fdb0c0ef9f8ab51d326693276658c158f97327bc0327  payload-src/build/q6q-F956BXXS4DZG3/cve-2026-43499-app.release.so
+=== build Android test APK ===
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as no cached configuration is available for tasks: assembleDebug
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugResources FROM-CACHE
+> Task :app:javaPreCompileDebug FROM-CACHE
+> Task :app:generateDebugBuildConfig
+> Task :app:packageDebugResources FROM-CACHE
+> Task :app:generateDebugGlobalSynthetics FROM-CACHE
+> Task :app:desugarDebugFileDependencies FROM-CACHE
+> Task :app:processDebugNavigationResources
+> Task :app:checkDebugDuplicateClasses
+> Task :app:checkDebugAarMetadata
+> Task :app:mergeLibDexDebug FROM-CACHE
+> Task :app:mapDebugSourceSetPaths
+> Task :app:compileDebugNavigationResources FROM-CACHE
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:mergeDebugResources FROM-CACHE
+> Task :app:parseDebugLocalResources FROM-CACHE
+> Task :app:generateDebugRFile FROM-CACHE
+> Task :app:mergeExtDexDebug FROM-CACHE
+> Task :app:processDebugMainManifest
+> Task :app:mergeDebugJniLibFolders
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+warn: removing resource dev.busung.s25uroot.f956btest:string/history_log without required default value.
+
+> Task :app:processDebugResources
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:validateSigningDebug
+> Task :app:configureCMakeDebug[arm64-v8a]
+> Task :app:buildCMakeDebug[arm64-v8a]
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:compileDebugKotlin
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugJavaResource
+> Task :app:compileDebugJavaWithJavac
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:assembleDebug
+> Task :app:createDebugApkListingFileRedirect
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1787029750211.json
+
+BUILD SUCCESSFUL in 53s
+40 actionable tasks: 29 executed, 11 from cache
+Configuration cache entry stored.
+8bef1dae927dc0662c4f928740a338fb375839a1ecf32e5d468f7234c58084ac  test-builds/f956b-dzg3/F956B-DZG3-exploit-test.apk
